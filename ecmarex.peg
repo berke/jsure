@@ -1,0 +1,104 @@
+start ::= <Regexp> rx_pattern </Regexp> EOF;
+
+rx_pattern ::= rx_disjunction;
+
+rx_disjunction ::= <Or>rx_alternative '|' rx_disjunction</Or> | rx_alternative;
+
+rx_alternative ::= rx_term rx_alternative | epsilon;
+
+rx_term ::= rx_assertion | <Quantified>rx_atom rx_quantifier</Quantified> | rx_atom;
+
+rx_assertion ::= <Begin/>"^" | <End/>"$" | <Word/>"\\b" | <WORD/>"\\B";
+
+rx_quantifier ::=
+    <Question> rx_quantifier_prefix '?' </Question>
+  | rx_quantifier_prefix
+;
+
+rx_quantifier_prefix ::=
+    <Star/> '*'
+  | <Plus/> '+'
+  | <Opt/> '?'
+  | <Range> '{' start:[0-9]+ (',' end:[0-9]*)? '}' </Range>
+;
+
+rx_atom ::=
+    <Atom>value:rx_pattern_char+</Atom>
+  | <Sigma/>'.'
+  | '(' <And>"?=" rx_disjunction</And>')'
+  | '(' <Not>"?!" rx_disjunction</Not> ')'
+  | '(' <Ignore>"?:" rx_disjunction</Ignore> ')'
+  | '(' <Group>rx_disjunction</Group> ')'
+  | '\\' rx_atom_escape
+  | rx_character_class
+;
+
+rx_pattern_char ::= ~[$\\.*+?()\[\]{}|^] sigma;
+
+rx_atom_escape ::=
+  <AtomEscape>
+    ( rx_decimal_escape
+    | rx_character_escape
+    | rx_character_class_escape
+    | rx_identity_escape )
+  </AtomEscape>
+;
+
+rx_identity_escape ::= '\\' <Identity>value:sigma</Identity>;
+
+rx_class_escape ::=
+    rx_character_class_escape
+  | rx_decimal_escape
+  | 'b'
+  | rx_character_escape
+;
+
+rx_character_escape ::=
+    <Escape>[fnrtv]</Escape>
+  | <Control>'c' value:[a-zA-Z]</Control>
+  | <Hex>'x' value:[0-9a-fA-F][0-9a-fA-F]</Hex>
+  | <Unicode>'u' value:[0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F]</Unicode>
+  | <Atom>value:sigma</Atom>
+;
+
+rx_decimal_escape ::= <Decimal>value:[0-9]+</Decimal>;
+
+rx_character_class_escape ::=
+    <Digits/> 'd'
+  | <NotDigits/> 'D'
+  | <Space/> 's'
+  | <NotSpace/> 'S'
+  | <Word/> 'w'
+  | <NotWord/> 'W'
+;
+
+rx_character_class ::= 
+    '[' '^' <DontMatch> rx_class_ranges </DontMatch> ']'
+  | '[' <Match> rx_class_ranges </Match> ']'
+;
+
+rx_class_ranges ::= rx_nonempty_class_ranges?;
+
+rx_nonempty_class_ranges ::=
+    <Range>rx_class_atom '-' rx_class_atom</Range> rx_class_ranges
+  | rx_class_atom rx_nonempty_class_ranges_no_dash
+  | rx_class_atom
+;
+
+rx_nonempty_class_ranges_no_dash ::=
+    <Range>rx_class_atom_no_dash '-' rx_class_atom</Range> rx_class_ranges
+  | rx_class_atom rx_nonempty_class_ranges_no_dash
+  | rx_class_atom
+;
+
+rx_class_atom ::=
+    '-'
+  | rx_class_atom_no_dash
+;
+
+rx_class_atom_no_dash ::=
+    '\\' rx_class_escape
+  | <Char>value:rx_source_char</Char>
+;
+
+rx_source_char ::= ~[\\\]\-] sigma;

@@ -1,0 +1,158 @@
+Jsure
+=====
+Copyright(C) 2007 Exalead SA.
+Released under the GNU Library General Public License.
+
+Description
+===========
+Jsure is a "lint" for Javascript, which is also known as Ecmascript.
+It checks syntax and a little bit of semantics.
+
+
+Usage
+=====
+You run jsure on your source files and jsure spits out ANSI-colored
+warnings and errors with excerpts from your code on your terminal.
+
+  jsure [options] file_1.js file_2.js ... file_n.js
+
+This is equivalent to
+
+  cat file_1.js ... file_n.js > file.js
+  jsure [options] file.js
+
+except for the reported error locations.
+
+
+Actions
+=======
+jsure will read and parse the input files.  If there is any unparseable file,
+it will report an error and stop.
+
+By default, Jsure will only check the syntax.  For more advanced checking,
+you must use on or more of the following options:
+  -check                : The most useful, all-purpose check (unused vars, etc.)
+  -forbidden-properties : Some property names such as 'name' cause problems;
+                          jsure can detect static instances of those problematic names.
+  -list-props           : Will list all the (static) property names used in the
+                          file.
+
+Miscellaneous options
+=====================
+  -quiet         Suppress informative messages
+  -no-warnings   Suppress warnings
+
+Changing behaviour on certain subdirectories
+============================================
+Errors and warnings produced by source files whose name starts with a prefix
+given by an -ignorify (resp. -warnify) option will be ignored (resp. transformed
+into warnings).
+
+
+Detection of anomalies
+======================
+Anomalies, such as using an uninitialized variable, are legal language
+constructs that are bad coding practice or likely errors.
+
+Each anomaly has an associated action, which can be changed with a one-letter
+flag by an option.  The actions are ignore (i), warn (w) or error (e).
+
+
+Anomalies
+=========
+
+-toplevel-bindings
+  Setting global properties without a "var".
+
+-assigning-to-args
+  Assigning to a function argument.
+
+-uninitialized-vars
+  Using uninitialized variables.  In Javascript, uninitialized variables are set
+  to undefined.
+
+
+Unused identifiers
+==================
+Jsure can detect unused variables (-unused-vars), arguments (-unused-args) or
+functions (-unused-funs).
+
+Sometimes it is unavoidable to have unused arguments - for example when you have
+to furnish a callback but have no need for all of its arguments.
+
+Jsure will ignore any variable, argument or function whose name starts with an
+underscore (_) will be ignored.  (The rule for flagging unused variables can be
+changed with the -unused-ident-regexp option.)  Using such a variable is an
+anomaly (-using-unused).
+
+
+Summary of anomalies
+====================
+  -unused-args           Function arguments unused in the body of the function.
+  -using-unused          Using variables or arguments lexically declared to be unused
+  -unused-vars           Unused variables
+  -unused-funs           Unused functions
+  -shadowing-args        Arguments shadowed by variables
+  -dangling-commas       Dangling commas in object and array litterals
+
+Not yet implemented:
+  -unreachable-code      Unreachable code
+
+
+Environment variables
+=====================
+It is possible to change the behaviour of jsure thru the environment variables
+JSURE and JSURE_BEFORE.  These variables define options to be processed before
+(JSURE_BEFORE) and after (JSURE) the processing of command-line options.
+
+The syntax for the environment variable is a little different than that of the
+command-line options.  For instance, the set of command-line options
+
+  -toplevel-bindings e -dont-catch
+
+would translate to
+
+JSURE="toplevel_bindings=e;dont_catch"
+
+In other words, the first dash (-) of the option names is to be removed,
+remaining dashes are to be replaced by underscores (_), options are to
+be separated by semicolons (;) and an equal sign (=) should separate
+option names from their arguments.
+
+
+Excerpts and colorization
+=========================
+Jsure can show the context surrounding errors.  This is settable with the
+-errors option: -errors t will display text, -errors p will only display the
+error position.  The same thing applies to warnings with the -warnings option.
+
+Jsure can also brighten up your life by partially colorizing error or warning
+messages.  These colors can be configured using the following options:
+
+  -info-color <color>     Info color
+  -warning-color <color>  Warning color
+  -error-color <color>    Error color
+  -number-color <color>   Line number color
+  -code-color <color>     Code color
+  -hl-color <color>       Code highlight color
+
+Here, <color> is one of;
+  black
+  red
+  green
+  yellow
+  blue
+  magenta
+  cyan
+  white
+  none
+
+and will produce corresponding ANSI escape sequences, which may or may not,
+given the configuration of your terminal, produce the expected colors.
+
+
+Caching parse trees
+===================
+To accelerate parsing, use the -cache <filename> option;  jsure will then
+cache parse trees in the file <filename>.dir, which will also be linked to
+<filename>.pag (this behaviour is defined by your system's DBM library).

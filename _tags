@@ -1,0 +1,2 @@
+<*.{ml,mli,byte,native,cma}>: use_aurochs_lib, use_libaurochs, use_unix, use_pack_lib, use_dbm, use_str, debug
+"jsure.ml": pp(camlp4o)
