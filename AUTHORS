@@ -6,3 +6,6 @@ Author
 ======
 - Berke Durak, Ph.D., Exalead SA R&D Engineer
   berke.durak@exalead.com
+
+Grammar derived from a Yacc implementation by Jean-Baptiste Tristan
+of the ECMA grammar.
