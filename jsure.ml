@@ -196,6 +196,13 @@ module Specs =
         "-hl-color",
         color code_hl_color,
         " Code highlight color";
+
+        "-version",
+        Unit(fun () ->
+          let (v1,v2,v3) = Version.version in
+          pf "jsure version %d.%d.%d\n" v1 v2 v3;
+          exit 0),
+        " Display Jsure version"
       ]
     ;;
   end
