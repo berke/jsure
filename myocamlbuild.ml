@@ -5,7 +5,7 @@ open Ocamlbuild_plugin;;
 open Command;;
 open Ocaml_specific;;
 
-let aurochs = ref (S[A"aurochs";A"-quiet";A"-target";A"ml";A"-generate"]);;
+let aurochs = ref (S[A"aurochs";A"-quiet";A"-target";A"ml"]);;
 let system_lib_dir = "/usr/lib";;
 
 dispatch
