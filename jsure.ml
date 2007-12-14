@@ -101,9 +101,21 @@ module Specs =
         String(aor forbidden_props_file),
         "<file> Load list of forbidden properties from this file";
 
+        "-no-check",
+        Clear check,
+        " Disable basic semantic checks";
+
         "-check",
         Set check,
-        " Perform basic semantic checks (such as assignments to undefined variables), with the following behaviour";
+        " Perform basic semantic checks (on by default)";
+
+        "-extension",
+        Set_string extension_regexp,
+        "<regexp> Extension describing valid source filename extensions";
+
+        "-stdin",
+        Set read_from_stdin,
+        " Read Javascript source from stdin";
 
         "-unused-ident-regexp",
         Set_string unused_ident_regexp,
@@ -288,24 +300,24 @@ let _ =
         Printf.printf "%s%!" msg;
         exit 2
   end;
-  match !sources with
-  | [] ->
-      Printf.printf "No source files.\n%!";
+  if !sources = [] && not !Opt.read_from_stdin then
+    begin
+      Printf.printf "No source files - maybe you should try the -stdin option?\n%!";
       exit 1
-  | sl ->
-      let res = Process.sources stdout sl in
-      if not !Opt.no_warnings then
-        List.iter
-          begin fun w ->
-            Printf.printf "%sWARNING: %s%s\n" Ansi.foreground.(!Opt.warning_color) w Ansi.none;
-          end
-          res.Process.res_warnings;
-      let errors = ref false in
-      List.iter
-        begin fun e ->
-          errors := true;
-          Printf.printf "%sERROR: %s%s\n" Ansi.foreground.(!Opt.error_color) e Ansi.none;
-        end
-        res.Process.res_errors;
-      exit (if !errors then 1 else 0)
+    end;
+  let res = Process.sources stdout !sources in
+  if not !Opt.no_warnings then
+    List.iter
+      begin fun w ->
+        Printf.printf "%sWARNING: %s%s\n" Ansi.foreground.(!Opt.warning_color) w Ansi.none;
+      end
+      res.Process.res_warnings;
+  let errors = ref false in
+  List.iter
+    begin fun e ->
+      errors := true;
+      Printf.printf "%sERROR: %s%s\n" Ansi.foreground.(!Opt.error_color) e Ansi.none;
+    end
+    res.Process.res_errors;
+  exit (if !errors then 1 else 0)
 ;;

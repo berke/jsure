@@ -14,12 +14,14 @@ let warnify : string list ref = ref [];;
 let ignorify : string list ref = ref [];;
 let minefield : string option ref = ref None;;
 let forbidden_props_file : string option ref = ref None;;
-let check = ref false;;
+let check = ref true;;
 let typecheck = ref false;;
 let mine_distance = ref 5.0;;
 let unused_ident_regexp = ref "^..*_$";;
 let safe_property_regexp = ref "^[a-zA-Z_][a-zA-Z0-9_]*$";;
+let extension_regexp = ref "\\.js$";;
 let generate = ref false;;
+let read_from_stdin = ref false;;
 
 let toplevel_bindings  = ref Err;;
 let assigning_to_args  = ref Wrn;;

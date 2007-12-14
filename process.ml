@@ -12,14 +12,49 @@ type result = {
   mutable res_warnings : string list
 };;
 (* ***)
-(*** read_file *)
-let read_file fn =
-  let ic = open_in fn in
-  let m = in_channel_length ic in
-  let u = String.create m in
-  really_input ic u 0 m;
-  close_in ic;
-  u
+(*** read_channel *)
+let read_channel ic =
+  let fd = Unix.descr_of_in_channel ic in
+  let st = Unix.fstat fd in
+  if st.Unix.st_kind = Unix.S_REG then
+    begin
+      let m = in_channel_length ic in
+      let u = String.create m in
+      really_input ic u 0 m;
+      u
+    end
+  else
+    begin
+      let u = String.create 4096 in
+      let b = Buffer.create 4096 in
+      let rec loop () =
+        let n = input ic u 0 (String.length u) in
+        if n = 0 then
+          Buffer.contents b
+        else
+          begin
+            Buffer.add_substring b u 0 n;
+            loop ()
+          end
+      in
+      loop ()
+    end
+;;
+(* ***)
+(*** name_of_source *)
+let name_of_source = function
+  | `Stdin -> "*stdin*"
+  | `File fn -> fn
+;;
+(* ***)
+(*** read_source *)
+let read_source = function
+  | `Stdin -> read_channel stdin
+  | `File fn ->
+      let ic = open_in fn in
+      let u = read_channel ic in
+      close_in ic;
+      u
 ;;
 (* ***)
 module SS = Set.Make(String);;
@@ -263,9 +298,10 @@ let sources oc sl =
     | None -> None
     | Some fn -> Some(Cache.create ~version:Ast.version fn)
   in
-  let check_file fn =
+  let check_source src =
     info "Loading";
-    let u = read_file fn in
+    let fn = name_of_source src in
+    let u = read_source src in
     let liner = Liner.create u in
     try
       (*** reparse *)
@@ -376,10 +412,18 @@ let sources oc sl =
   (* ***)
   try
     check_extensions ();
+    let sl = List.map (fun fn -> `File fn) sl in
+    let sl =
+      if !Opt.read_from_stdin then
+        `Stdin :: sl
+      else
+        sl
+    in
     exit_on_error ();
-    List.iter (fun fn ->
+    List.iter (fun src ->
+      let fn = name_of_source src in
       info (sf "Processing file %S" fn);
-      check_file fn;
+      check_source src;
       info (sf "Done with file %S" fn)) sl;
     if !Opt.typecheck then
       begin
