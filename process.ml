@@ -106,6 +106,9 @@ let need_to_warnify fn = List.exists (fun prefix -> is_prefix prefix fn) !Opt.wa
 (*** need_to_ignorify *)
 let need_to_ignorify fn = List.exists (fun prefix -> is_prefix prefix fn) !Opt.ignorify;;
 (* ***)
+(*** filename_rex *)
+let filename_rex = lazy (Str.regexp !Opt.filename_regexp);;
+(* ***)
 (*** sources *)
 let sources oc sl =
   let cd = stdoutcd in
@@ -146,11 +149,10 @@ let sources oc sl =
   let exit_on_error () = if have_errors () then raise Exit in
   (*** check_extensions *)
   let check_extensions () =
-    let extension = ".js" in
     List.iter
       (fun fn ->
-        if not (Filename.check_suffix fn extension) then
-          error (sf "File %S does not have suffix %S." fn extension))
+        if not (Str.string_match (Lazy.force filename_rex) fn 0) then
+          error (sf "Filename %S does not conform to regexp %S." fn !Opt.filename_regexp))
       sl
   in
   (* ***)

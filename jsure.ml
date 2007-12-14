@@ -109,9 +109,9 @@ module Specs =
         Set check,
         " Perform basic semantic checks (on by default)";
 
-        "-extension",
-        Set_string extension_regexp,
-        "<regexp> Extension describing valid source filename extensions";
+        "-filenames",
+        Set_string filename_regexp,
+        "<regexp> Regexp describing valid source filenames";
 
         "-stdin",
         Set read_from_stdin,
