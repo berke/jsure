@@ -2,12 +2,13 @@
 
 .PHONY: all clean install
 
+PREFIX?=/usr/local
+
 all:
-	ocamlbuild.native jsure.native
+	ocamlbuild jsure.native
 
 install: all
-	cp jsure.native ~/bin/jsure
-	cp jsure.native ~/src/baagz/trunk/admin/jsure
+	install -m 0755 jsure.native $(PREFIX)/bin/jsure
 
 clean:
-	rm -rf _build _log
+	rm -rf _build _log jsure.native
