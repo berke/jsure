@@ -42,7 +42,7 @@ let info_color        = ref Ansi.green;;
 let warning_color     = ref Ansi.yellow;;
 let error_color       = ref Ansi.red;;
 let line_number_color = ref Ansi.blue;;
-let code_color        = ref Ansi.white;;
+let code_color        = ref Ansi.uncoloured;;
 let code_hl_color     = ref Ansi.red;;
 
 let cache : string option ref = ref None;;
