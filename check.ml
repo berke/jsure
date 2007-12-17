@@ -373,7 +373,7 @@ let check ~dump_cd ~info_cd ~warn ~warn_cd ~error ~error_cd sources =
           | _ -> ()
         with
         | Not_found -> 
-          () (* warn env (sf "Variable %s not found" name) *)
+            treatment Opt.undefined_variables env (sf "Variable %s could be undefined" name)
       end
     | U(_, x) -> check_expr env x
     | B(_, x1, x2) ->

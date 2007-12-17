@@ -131,7 +131,11 @@ module Specs =
 
         "-unbound-variables",
         treatment unbound_variables,
-        " Using apparently unbound global variables";
+        " Assigning to apparently unbound global variables, except in the toplevel";
+
+        "-undefined-variables",
+        treatment undefined_variables,
+        " Referring to global names not obviously declared";
 
         "-toplevel-bindings",
         treatment toplevel_bindings,
