@@ -304,7 +304,7 @@ let sources oc sl =
     info "Loading";
     let fn = name_of_source src in
     let u = read_source src in
-    let liner = Liner.create u in
+    let liner = Liner.create ~offset:!Opt.line_number_offset u in
     try
       (*** reparse *)
       let reparse () =

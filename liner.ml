@@ -3,11 +3,12 @@
 (*** t *)
 type t = {
   l_length : int;
-  l_table : (int * int) array
+  l_table : (int * int) array;
+  l_offset : int
 };;
 (* ***)
 (*** create *)
-let create u =
+let create ?(offset=0) u =
   let m = String.length u in
   let t = ref [] in
   let line = ref 0 in
@@ -19,11 +20,13 @@ let create u =
       end
   done;
   { l_length = m;
-    l_table = Array.of_list (List.rev !t) }
+    l_table  = Array.of_list (List.rev !t);
+    l_offset = offset }
 ;;
 (* ***)
 (*** line_to_range *)
-let line_to_range l i =
+let line_to_range l ?(offset=l.l_offset) i =
+  let i = i - offset in
   let (_, end_pos) = l.l_table.(i) in
   if i = 0 then
     (0, end_pos)
@@ -36,7 +39,7 @@ let line_to_range l i =
 let position_to_line l j =
   let m = Array.length l.l_table in
   let in_line i =
-    let (start_pos, end_pos) = line_to_range l i in
+    let (start_pos, end_pos) = line_to_range l ~offset:0 i in
     start_pos <= j && j <= end_pos
   in
   let rec loop i0 m =
@@ -51,7 +54,7 @@ let position_to_line l j =
             loop (i0 + 1) (m - 1)
         else
           let i = i0 + m / 2 in
-          let (start_pos, end_pos) = line_to_range l i in
+          let (start_pos, end_pos) = line_to_range l ~offset:0 i in
           if start_pos <= j && j <= end_pos then
             i
           else
@@ -61,7 +64,7 @@ let position_to_line l j =
               loop (i + 1) (m - m / 2 - 1)
       end
   in
-  loop 0 m
+  l.l_offset + loop 0 m
 ;;
 (* ***)
 (*** test *)

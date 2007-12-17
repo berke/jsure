@@ -317,7 +317,7 @@ let check ~dump_cd ~info_cd ~warn ~warn_cd ~error ~error_cd sources =
                 if env.env_with then
                   ()
                 else
-                  error env (sf "Unbound variable %s" name)
+                  treatment Opt.unbound_variables env (sf "Unbound variable %s" name)
         end
     | B(B_bracket, x1, x2) ->
       check_expr env x1;

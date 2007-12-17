@@ -117,6 +117,10 @@ module Specs =
         Set read_from_stdin,
         " Read Javascript source from stdin";
 
+        "-line-offset",
+        Set_int line_number_offset,
+        "<n> Add n to reported line numbers";
+
         "-unused-ident-regexp",
         Set_string unused_ident_regexp,
         "<regexp> Regular expression for lexically describing identifiers supposed to be unused";
@@ -124,6 +128,10 @@ module Specs =
         "-dangling-commas",
         treatment dangling_commas,
         " Dangling commas in object and array litterals";
+
+        "-unbound-variables",
+        treatment unbound_variables,
+        " Using apparently unbound global variables";
 
         "-toplevel-bindings",
         treatment toplevel_bindings,

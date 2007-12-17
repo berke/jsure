@@ -22,17 +22,19 @@ let safe_property_regexp = ref "[a-zA-Z_][a-zA-Z0-9_]*";;
 let filename_regexp = ref ".*\\.js";;
 let generate = ref false;;
 let read_from_stdin = ref false;;
+let line_number_offset = ref 0;;
 
-let toplevel_bindings  = ref Err;;
-let assigning_to_args  = ref Wrn;;
-let unused_vars        = ref Err;;
-let unused_funs        = ref Err;;
+let unbound_variables  = ref Wrn;;
+let toplevel_bindings  = ref Ign;;
+let assigning_to_args  = ref Ign;;
+let unused_vars        = ref Wrn;;
+let unused_funs        = ref Wrn;;
 let unused_args        = ref Wrn;;
-let using_unused       = ref Err;;
+let using_unused       = ref Wrn;;
 let uninitialized_vars = ref Wrn;;
 let shadowing_args     = ref Wrn;;
 let unreachable_code   = ref Wrn;;
-let dangling_commas    = ref Wrn;;
+let dangling_commas    = ref Err;;
 let bad_regexps        = ref Err;;
 
 let error_visualization   = ref Txt;;
