@@ -60,7 +60,7 @@ and expr =
 and property_name =
 | PN_String of string
 | PN_Float of float
-| PN_Int of int
+| PN_Int of int32
 | PN_Empty
 and binop =
 | B_mul
@@ -115,7 +115,7 @@ and assignment_operator =
 | A_or
 and litteral =
 | Float of float
-| Int of int
+| Int of int32
 | String of string
 | Regexp of string * string
 | Bool of bool
@@ -199,7 +199,7 @@ and iter_over_expr_in_lhs info f = function
 let scribe_property_name cd oc = function
 | PN_String u -> cd.cd_print oc "%S" u
 | PN_Float f -> cd.cd_print oc "%f" f
-| PN_Int x -> cd.cd_print oc "%d" x
+| PN_Int x -> cd.cd_print oc "%ld" x
 | PN_Empty -> cd.cd_print oc "*empty*"
 ;;
 (* ***)

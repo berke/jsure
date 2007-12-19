@@ -13,7 +13,7 @@ module PNM = Map.Make(struct type t = property_name let compare = compare end);;
 type 'func t =
 | T_String of string option
 | T_Float of float option
-| T_Int of int option
+| T_Int of int32 option
 | T_Regexp
 | T_Bool of bool option
 | T_Null

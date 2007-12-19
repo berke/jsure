@@ -8,6 +8,8 @@ open Ecma;;
 exception Bad_tree of Ecma.tree;;
 exception Bad_trees of Ecma.tree list;;
 
+let int32_of_string u = Int64.to_int32 (Int64.of_string u);;
+
 let rec convert = function
   | Node(N_Root, _, [Node(N_Program, _, sl)]) -> convert_source_elements sl
   | t -> raise (Bad_tree t)
@@ -120,7 +122,7 @@ and convert_expression = function
         | _ -> raise (Bad_tree t)
       in
       L(Regexp(body, options))
-  | Node(N_Integer, [A_value, n], []) -> L(Int(int_of_string n))
+  | Node(N_Integer, [A_value, n], []) -> L(Int(int32_of_string n))
   | Node(N_Float, [A_value, f], []) -> L(Float(float_of_string f))
   | Node(N_Shift, [], [x1;Node(N_Asr, _, _);x2]) -> B(B_asr, convert_expression x1, convert_expression x2)
   | Node(N_Shift, [], [x1;Node(N_Lsr, _, _);x2]) -> B(B_lsr, convert_expression x1, convert_expression x2)
@@ -193,7 +195,7 @@ and convert_expression = function
   | t -> raise (Bad_tree t)
 and convert_property_name = function
   | Node(N_Ident, [A_name, name], []) | Node(N_String, [A_value, name], []) -> PN_String name
-  | Node(N_Integer, [A_value, value], []) -> PN_Int(int_of_string value)
+  | Node(N_Integer, [A_value, value], []) -> PN_Int(int32_of_string value)
   | Node(N_Float, [A_value, value], []) -> PN_Float(float_of_string value)
   | t -> raise (Bad_tree t)
 and convert_property = function

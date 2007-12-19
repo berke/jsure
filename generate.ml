@@ -227,7 +227,7 @@ let generate f pg =
             fp f "@\n";
             begin
               match pn with
-              | PN_Int x -> fp f "%d" x
+              | PN_Int x -> fp f "%ld" x
               | PN_Float x -> fp f "%f" x
               | PN_String x when is_property_safe x -> fp f "%s" x
               | PN_String x -> fp f "%S" x
@@ -314,7 +314,7 @@ let generate f pg =
     block sl
   and litteral = function
     | Float x -> fp f "%f" x
-    | Int x -> fp f "%d" x
+    | Int x -> fp f "%ld" x
     | String s -> fp f "%S" s
     | Regexp(r, o) -> fp f "/%s/%s" r o
     | Bool b -> fp f "%b" b
