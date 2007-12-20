@@ -55,30 +55,6 @@ let copy_dictionary_option = function
 | None -> None
 | Some d -> Some(copy_dictionary d)
 ;;
-(*** slice_left *)
-let slice_left u i =
-  let m = String.length u in
-  if i <= 0 then
-    ("", u)
-  else
-    if i >= m then
-      (u, "")
-    else
-      (String.sub u 0 i, String.sub u i (m - i))
-;;
-(* ***)
-(*** slice_right *)
-let slice_right u i =
-  let m = String.length u in
-  if i <= 0 then
-    (u, "")
-  else
-    if i >= m then
-      ("", u)
-    else
-      (String.sub u 0 (m - i), String.sub u (m - i) i)
-;;
-(* ***)
 (*** is_supposedly_unused *)
 let is_supposedly_unused =
   let rex = lazy (Str.regexp !Opt.unused_ident_regexp) in
@@ -114,35 +90,6 @@ let check ~dump_cd ~info_cd ~warn ~warn_cd ~error ~error_cd sources =
     env_level = 0
   }
   in
-  (*** extract_lines *)
-  let extract_lines s start_pos end_pos =
-    let l_i = Liner.position_to_line s.s_liner start_pos
-    and l_j = Liner.position_to_line s.s_liner (end_pos - 1)
-    in
-    let m = l_j - l_i + 1 in
-    Array.init m
-      begin fun i ->
-        let l = l_i + i in
-        let (x, y) = Liner.line_to_range s.s_liner l in
-        let u = String.sub s.s_text x (y - x) in
-        let (prefix, u) =
-          if l = l_i then
-            let c_i = start_pos - x in
-            slice_left u c_i
-          else
-            "", u
-        in
-        let (u, suffix) =
-          if l = l_j then
-            let c_j = y - end_pos in
-            slice_right u c_j
-          else
-            u, ""
-        in
-        (l, prefix, u, suffix)
-      end
-  in
-  (* ***)
   let informer v f env x =
     f begin fun cd oc ->
         match env.env_source with
@@ -152,19 +99,6 @@ let check ~dump_cd ~info_cd ~warn ~warn_cd ~error ~error_cd sources =
             | Pos -> cd.cd_print oc "In file %S at %a: %s" s.s_file (scribe_position s.s_liner cd) (env.env_start, env.env_end) x
             | Txt ->
                 (* Show source... *)
-                let lines = extract_lines s env.env_start env.env_end in
-                let b = Buffer.create 256 in
-                Array.iter
-                  begin fun (l, u, v, w) ->
-                    if Buffer.length b > 0 then bf b "\n";
-                    bf b "%s%5d%s %s%s%s%s%s%s%s"
-                         Ansi.foreground.(!Opt.line_number_color) (l + 1) Ansi.none
-                         Ansi.foreground.(!Opt.code_color) u
-                         Ansi.foreground.(!Opt.code_hl_color) v
-                         Ansi.foreground.(!Opt.code_color) w
-                         Ansi.none
-                  end
-                  lines;
                 cd.cd_print
                   oc
                   "In file %S at %a: %s:\n%s"
@@ -172,7 +106,7 @@ let check ~dump_cd ~info_cd ~warn ~warn_cd ~error ~error_cd sources =
                   (scribe_position s.s_liner cd)
                   (env.env_start, env.env_end)
                   x
-                  (Buffer.contents b)
+                  (Excerpt.excerpt s.s_liner s.s_text env.env_start env.env_end)
       end
   in
   let warn env x =

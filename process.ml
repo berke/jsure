@@ -397,7 +397,16 @@ let sources oc sl =
             end;
         end
     with
-    | Aurochs_pack.Aurochs.Parse_error x -> error_cd (fun cd oc -> cd.cd_print oc "In file %S, parse error at %a." fn (scribe_position liner cd) (x,x))
+    | Aurochs_pack.Aurochs.Parse_error x ->
+        error_cd
+          (fun cd oc ->
+            cd.cd_print
+            oc
+            "In file %S, parse error at %a:\n%s"
+            fn
+            (scribe_position liner cd)
+            (x, x + 1)
+            (Excerpt.excerpt liner u x (x + 1)))
     | x -> 
         if !Opt.dont_catch then
           raise x

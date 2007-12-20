@@ -5,7 +5,10 @@ type t = {
   l_length : int;
   l_table : (int * int) array;
   l_offset : int
-};;
+}
+(* ***)
+(*** length *)
+let length l = l.l_length
 (* ***)
 (*** create *)
 let create ?(offset=0) u =
@@ -22,7 +25,6 @@ let create ?(offset=0) u =
   { l_length = m;
     l_table  = Array.of_list (List.rev !t);
     l_offset = offset }
-;;
 (* ***)
 (*** line_to_range *)
 let line_to_range l ?(offset=l.l_offset) i =
@@ -33,7 +35,6 @@ let line_to_range l ?(offset=l.l_offset) i =
   else
     let (_, start_pos) = l.l_table.(i - 1) in
     (start_pos + 1, end_pos)
-;;
 (* ***)
 (*** position_to_line *)
 let position_to_line l j =
@@ -65,7 +66,6 @@ let position_to_line l j =
       end
   in
   l.l_offset + loop 0 m
-;;
 (* ***)
 (*** test *)
 let test () =
@@ -76,5 +76,4 @@ let test () =
     let (s,e) = line_to_range l j in
     Printf.printf "%d -> #%d [%d,%d]\n%!" i j s e
   done
-;;
 (* ***)

@@ -60,3 +60,55 @@ let scribe_position_set liner cd oc set =
   cd.cd_print oc " }"
 ;;
 (* ***)
+(*** slice_left *)
+let slice_left u i =
+  let m = String.length u in
+  if i <= 0 then
+    ("", u)
+  else
+    if i >= m then
+      (u, "")
+    else
+      (String.sub u 0 i, String.sub u i (m - i))
+;;
+(* ***)
+(*** slice_right *)
+let slice_right u i =
+  let m = String.length u in
+  if i <= 0 then
+    (u, "")
+  else
+    if i >= m then
+      ("", u)
+    else
+      (String.sub u 0 (m - i), String.sub u (m - i) i)
+;;
+(* ***)
+(*** extract_lines *)
+let extract_lines liner text start_pos end_pos =
+  let l_i = Liner.position_to_line liner start_pos
+  and l_j = Liner.position_to_line liner (end_pos - 1)
+  in
+  let m = l_j - l_i + 1 in
+  Array.init m
+    begin fun i ->
+      let l = l_i + i in
+      let (x, y) = Liner.line_to_range liner l in
+      let u = String.sub text x (y - x) in
+      let (prefix, u) =
+        if l = l_i then
+          let c_i = start_pos - x in
+          slice_left u c_i
+        else
+          "", u
+      in
+      let (u, suffix) =
+        if l = l_j then
+          let c_j = y - end_pos in
+          slice_right u c_j
+        else
+          u, ""
+      in
+      (l, prefix, u, suffix)
+    end
+(* ***)
