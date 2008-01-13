@@ -19,6 +19,8 @@ dispatch
           end
           ["aurochs_lib"];
 
+        Options.ocamlopt := S[A"ocamlopt";A"-verbose"];
+
         ocaml_lib ~extern:true "aurochs_lib";
 
         flag ["link"; "ocaml"; "byte"; "use_libaurochs"]
