@@ -1,0 +1,20 @@
+def allowed_options {
+ :just_syntax          => {:type => 'bool', :default => true, :description => 'Just check the syntax of input files'},
+ :no_warnings          => {:type => 'bool', :default => true, :description => 'Suppress warnings'},
+ :typecheck            => {:type => 'bool', :default => true, :description => 'Attempt to typecheck source files'},
+ :no_check             => {:type => 'bool', :default => true, :description => 'Disable basic semantic checks'},
+ :check                => {:type => 'bool', :default => true, :description => 'Perform basic semantic checks (on by default)'},
+ :dangling_commas      => {:type => 'wei',  :default => 'w',  :description => 'Dangling commas in object and array litterals'},
+ :unbound_variables    => {:type => 'wei',  :default => 'w',  :description => 'Assigning to apparently unbound global variables, except in the toplevel'},
+ :undefined_variables  => {:type => 'wei',  :default => 'w',  :description => 'Referring to global names not obviously declared'},
+ :toplevel_bindings    => {:type => 'wei',  :default => 'w',  :description => 'Setting global properties (without a "var")'},
+ :assigning_to_args    => {:type => 'wei',  :default => 'w',  :description => 'Assigning to arguments'},
+ :uninitialized_vars   => {:type => 'wei',  :default => 'w',  :description => 'Uninitialized variables'},
+ :unused_args          => {:type => 'wei',  :default => 'w',  :description => 'Unused arguments'},
+ :using_unused         => {:type => 'wei',  :default => 'w',  :description => 'Using variables or arguments lexically declared to be unused'},
+ :unused_vars          => {:type => 'wei',  :default => 'w',  :description => 'Unused variables'},
+ :unused_funs          => {:type => 'wei',  :default => 'w',  :description => 'Unused functions'},
+ :shadowing_args       => {:type => 'wei',  :default => 'w',  :description => 'Arguments shadowed by variables'},
+ :unreachable_code     => {:type => 'wei',  :default => 'w',  :description => 'Unreachable code'},
+ :bad_regexps          => {:type => 'wei',  :default => 'w',  :description => 'Bad regular expression litterals'}
+}
