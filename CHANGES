@@ -1,0 +1,2 @@
+2008-03-10 1.0.1 Fixed parser bug involving do ... while(...) statements.
+2008-01-13 1.0.0 First public version
