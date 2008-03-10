@@ -2,4 +2,7 @@ Installation instructions
 =========================
 
 * Pre-compiled binaries for Linux are available in bin/
-* To compile Jsure, you need Aurochs, see http://aurochs.fr/
+* To compile Jsure:
+  - Get, build and install Aurochs from http://aurochs.fr/
+  - make
+  - PREFIX=/usr/local make install
