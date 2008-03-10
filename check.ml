@@ -303,7 +303,7 @@ let check ~dump_cd ~info_cd ~warn ~warn_cd ~error ~error_cd sources =
           let v = find env name in
           v.v_usage <- 1 + v.v_usage;
           match v.v_value with
-          | T_Undefined -> treatment Opt.uninitialized_vars env (sf "Variable %S used while undefined" name)
+          | T_Undefined -> treatment Opt.uninitialized_vars env (sf "Variable %S may be used while undefined" name)
           | _ -> ()
         with
         | Not_found -> 

@@ -269,7 +269,7 @@ outfixing optional_space do
       ;
 
     iteration_statement ::=
-        <Do> DO <Loop>statement</Loop> WHILE LPAR <Condition>expression</Condition> RPAR </Do>
+        <Do> DO <Loop>statement DOTCOM?</Loop> WHILE LPAR <Condition>expression</Condition> RPAR </Do>
       | <While> WHILE LPAR <Condition>expression</Condition> RPAR <Loop>statement</Loop> </While>
       | <ForIn>
           FOR
