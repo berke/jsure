@@ -14,7 +14,14 @@ integer ::=
       | [1-9][0-9]*
       | '0')
   ;
-float ::= value:(('0' | [1-9][0-9]* )? '.' [0-9]+);
+
+float ::= value:(
+    '-'?
+    [0-9][0-9]*
+    ('.' [0-9]*)?
+    ([eE] ('+'|'-')? [0-9] [0-9]*)?
+  )
+  ;
 
 alphanum ::= [A-Za-z_0-9$]; (* Check lexical rules for identifiers *)
 alpha ::= [A-Za-z_$];
