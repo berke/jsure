@@ -463,9 +463,9 @@ outfixing optional_space do
       ;
 
     shift_op ::=
-        <Lsl/>LL
+        <Lsr/>RRR
+      | <Lsl/>LL
       | <Asr/>RR
-      | <Lsr/>RRR
       ;
 
     relational_expression ::=
