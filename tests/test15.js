@@ -1,5 +1,7 @@
 // Sent by Michael Dayah
 
+var numbers = [1e3, 2e-3];
+var numbers2 = [1E-12];
 foo = 0xff;
 bar = 0xFF;
 result = start + ((( Math.round(((((end & 0xFF0000) >> 16) - ((start    
