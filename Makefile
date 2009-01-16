@@ -1,10 +1,12 @@
 # Makefile
 
-.PHONY: all clean install
+.PHONY: all clean install tests jsure
 
 PREFIX?=/usr/local
 
-all:
+all: jsure
+
+jsure:
 	ocamlbuild jsure.native
 
 install: all
@@ -12,3 +14,6 @@ install: all
 
 clean:
 	rm -rf _build _log jsure.native
+
+tests: jsure
+	@cd tests; ./test.sh
