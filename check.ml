@@ -197,9 +197,8 @@ let check ~dump_cd ~info_cd ~warn ~warn_cd ~error ~error_cd sources =
                 let env = { env with env_start = v.v_start; env_end = v.v_end } in
                 match v.v_value with
                 | T_Argument -> treatment Opt.unused_args env (sf "Unused argument %S" n)
-                | T_Variable -> treatment Opt.unused_vars env (sf "Unused identifier %S" n)
+                | T_Undefined | T_Variable -> treatment Opt.unused_vars env (sf "Unused identifier %S" n)
                 | T_Function -> treatment Opt.unused_funs env (sf "Unused function %S" n)
-                | T_Undefined -> ()
               end
           end
           !d
