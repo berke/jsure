@@ -115,7 +115,7 @@ let sources oc sl =
   (* Check that all source files have a valid extension *)
   let result = { res_errors = []; res_warnings = [] } in
   let error u = result.res_errors <- u :: result.res_errors in
-  let info u = if not !Opt.quiet then fp oc "%sINFO: %s%s\n%!" Ansi.foreground.(!Opt.info_color) u Ansi.none in
+  let info u = if not !Opt.quiet then fp oc "%sINFO: %s%s\n%!" (Ansi.foreground !Opt.info_color) u (Ansi.none ()) in
   let warn u = result.res_warnings <- u :: result.res_warnings in
   let ignore_cd f = () in
   (*** error_cd *)

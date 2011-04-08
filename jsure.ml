@@ -221,6 +221,10 @@ module Specs =
         color code_hl_color,
         " Code highlight color";
 
+        "-no-color",
+        Unit(fun () -> Ansi.control false),
+        " Suppress ANSI color codes in output";
+
         "-version",
         Unit(fun () ->
           let (v1,v2,v3) = Version.version in
@@ -321,14 +325,14 @@ let _ =
   if not !Opt.no_warnings then
     List.iter
       begin fun w ->
-        Printf.printf "%sWARNING: %s%s\n" Ansi.foreground.(!Opt.warning_color) w Ansi.none;
+        Printf.printf "%sWARNING: %s%s\n" (Ansi.foreground !Opt.warning_color) w (Ansi.none ());
       end
       res.Process.res_warnings;
   let errors = ref false in
   List.iter
     begin fun e ->
       errors := true;
-      Printf.printf "%sERROR: %s%s\n" Ansi.foreground.(!Opt.error_color) e Ansi.none;
+      Printf.printf "%sERROR: %s%s\n" (Ansi.foreground !Opt.error_color) e (Ansi.none ());
     end
     res.Process.res_errors;
   exit (if !errors then 1 else 0)

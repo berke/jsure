@@ -1,3 +1,4 @@
+2011-04-08 1.0.4 Implement -no-color option.
 2009-01-16 1.0.3 Fixed parser bug involving hex constants and float lexemes (again!).
 2008-03-11 1.0.2 Fixed parser bug involving unsigned right shift and float lexemes.
 2008-03-10 1.0.1 Fixed parser bug involving do ... while(...) statements.

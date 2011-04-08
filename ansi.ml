@@ -2,6 +2,12 @@
 
 open Pffpsf;;
 
+let enabled    = ref true;;
+
+let control x = enabled := x
+
+let filter u = if !enabled then u else "";;
+
 let black      = 0;;
 let red        = 1;;
 let green      = 2;;
@@ -12,7 +18,7 @@ let cyan       = 6;;
 let white      = 7;;
 let uncoloured = 8;;
 
-let foreground = [|
+let foreground_array = [|
   "\027[30m";
   "\027[31m";
   "\027[32m";
@@ -24,7 +30,9 @@ let foreground = [|
   "\027[0m";
 |];;
 
-let background = [|
+let foreground i = filter foreground_array.(i);;
+
+let background_array = [|
   "\027[40m";
   "\027[41m";
   "\027[42m";
@@ -36,9 +44,11 @@ let background = [|
   "\027[0m";
 |];;
 
-let move_to oc x = fp oc "\r\027[%dC\027[K" x
-let up = "\027[1A"
-let ceol = "\027[K"
-let home = "\r"
-let none = "\027[0m"
+let background i = filter background_array.(i);;
+
+let move_to oc x = if !enabled then fp oc "\r\027[%dC\027[K" x else ();;
+let up () = filter "\027[1A"
+let ceol () = filter "\027[K"
+let home () = filter "\r"
+let none () = filter "\027[0m"
 ;;
